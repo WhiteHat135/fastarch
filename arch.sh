@@ -48,8 +48,34 @@ pacstrap /mnt
 
 echo "Настройка"
 arch-chroot /mnt
-cd
+cd  
 bootctl install
-sed -i 's/^HOOKS=(.*)/HOOKS=(base udev net encrypt filesystems)/' /etc/mkinitcpio.conf
+sed -i 's/^HOOKS=(.*)/HOOKS=(encrypt keymap base udev autodetect modconf block filesystems keyboard fsck)/' /etc/mkinitcpio.conf
 touch /boot/loade
-wget -P /boot/loader/ http://82.146.57.149:4000/loader.conf
+wget -P /boot/loader/ https://raw.githubusercontent.com/WhiteHat135/fastarch/master/etc/loader.conf
+wget -P /boot/loader/entries https://raw.githubusercontent.com/WhiteHat135/fastarch/master/etc/arch.conf
+mkinitcpio -p linux
+
+echo "Установка пакетов"
+pacman -S xorg-server
+echo;
+echo y;
+pacman -S i3
+echo 1;
+echo y;
+wget https://raw.githubusercontent.com/WhiteHat135/fastarch/master/etc/.xinitrc
+
+useradd -m -g users -G audio,lp,optical,power,scanner,storage,video,wheel -s /bin/bash dm
+passwd dm
+
+pacman -S sudo
+echo y;
+
+wget -P /etc/ https://raw.githubusercontent.com/WhiteHat135/fastarch/master/etc/sudoers
+
+pacman -S xorg-xinint
+echo y;
+
+exit 
+
+reboot
